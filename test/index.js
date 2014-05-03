@@ -115,24 +115,30 @@ tape('multi-reference', function (t) {
   t.end()
 })
 
-return
 tape('nesting', function (t) {
   var p = protocol()
+
   p.append({ id: 'foo', position: {x:0, y:0}, size: {x:100, y:100} })
-
-
-  p.append({ id: 'foo.bar', position: centered('..'), size: {x: 50, y: 50} })
+  p.append({ id: 'foo/bar', position: centered('..'), size: {x: 50, y: 50} })
 
   t.deepEqual(p.snapshot(), {
-    foo: {
+      foo: {
       id: 'foo',
-      position: {x: 0, y: 0}, size: {x:100, y:100},
-      bar: {
-        id: 'foo.bar',
-        position: {x:25, y:25}, size: {x: 50, y: 50}
+      position: {x: 0, y: 0},
+      size: {x: 100, y: 100},
+      //should this be a sub property?
+      //or should it just be like the other attributes.
+      //if it's an attribute, then you have to check
+      //whether it's a child or not.
+      //I'm gonna go with NO. simpler.
+      bar:{
+        id: 'foo/bar',
+        position: {x: 25, y: 25},
+        size: {x: 50, y: 50}
       }
     }
   })
+
   t.end()
 })
 
